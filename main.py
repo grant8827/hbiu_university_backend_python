@@ -39,7 +39,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 origins = [
     "http://localhost:5174",
     "http://localhost:3000",
-    "https://hbiuuniversityfrontend-production.up.railway.app"
+    "http://localhost:8000",
+    "https://hbiuuniversityfrontend-production.up.railway.app",
+    "https://*.railway.app",
+    "https://*.up.railway.app"
 ]
 
 app.add_middleware(
@@ -669,5 +672,7 @@ async def explain_concept(request: dict, current_user: dict = Depends(get_curren
     return AIResponse(**result)
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8001))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    # Only use reload in development
+    reload = os.getenv("RAILWAY_ENVIRONMENT") != "production"
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=reload)
